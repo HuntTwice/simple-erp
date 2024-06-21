@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zc.mapper.StockBackMapper">
+
+
+
+    <insert id="add">
+        insert into stock_back(`supplier_id`, goods_id, pay_type, `time`, `user`, `num`, `unit`, `price`, `total_price`, `comment`)
+            VALUE (#{supplierId}, #{goodsId}, #{payType}, #{time}, #{user}, #{num}, #{unit},
+                   #{price}, #{totalPrice}, #{comment})
+    </insert>
+
+
+    <select id="pageQuery" resultType="com.zc.pojo.vo.StockBackVO">
+        select s.name supplierName, stock_back.*, g.name goodsName, u.name operator
+        from stock_back
+                 left join user u on u.id = stock_back.user
+                 left join goods g on stock_back.goods_id = g.id
+                 left join supplier s on s.id = stock_back.supplier_id
+        <where>
+            <if test="supplierId != null">and stock_back.supplier_id = #{supplierId}</if>
+            <if test="goodsName != null and goodsName != ''">and g.name like concat('%',#{goodsName},'%') </if>
+        </where>
+        order by time desc
+    </select>
+</mapper>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zc.mapper.StockMapper">
+
+    <update id="updateById">
+        update stock
+        <set>
+            <if test="supplierId!=null">supplier_id=#{supplierId},</if>
+            <if test="goodsId!=null">goods_id=#{goodsId},</if>
+            <if test="payType!=null and payType!=''">pay_type=#{payType},</if>
+            <if test="time!=null">`time`=#{time},</if>
+            <if test="num!=null">num=#{num},</if>
+
+            <if test="price!=null">price=#{price},</if>
+            <if test="totalPrice!=null">total_price=#{totalPrice},</if>
+            <if test="comment!=null and comment!=''">comment=#{comment},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <insert id="add">
+        insert into stock(`supplier_id`, goods_id, pay_type, `time`, user_id, `num`, `price`, `total_price`,
+                          `comment`)
+            VALUE (#{supplierId}, #{goodsId}, #{payType}, #{time}, #{userId}, #{num},
+                   #{price}, #{totalPrice}, #{comment})
+    </insert>
+
+
+    <select id="pageQuery" resultType="com.zc.pojo.vo.StockVO">
+        select s.name as supplierName, stock.*, g.name as goodsName ,g.unit as unit ,g.num as totalInventory, u.name as operator
+        from stock
+        left join user u on u.id = stock.user_id
+        left join goods g on stock.goods_id = g.id
+        left join supplier s on s.id = stock.supplier_id
+        <where>
+            <if test="supplierId != null">and stock.supplier_id = #{supplierId}</if>
+            <if test="goodsName != null and goodsName != ''">and g.name like concat('%',#{goodsName},'%')</if>
+            <if test="operator != null and operator != ''">and u.name like concat('%',#{operator},'%')</if>
+        </where>
+        order by time desc
+    </select>
+</mapper>

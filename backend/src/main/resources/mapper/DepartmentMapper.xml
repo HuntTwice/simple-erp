@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zc.mapper.DepartmentMapper">
+
+    <update id="updateById">
+        update department
+        <set>
+            <if test="name!=null and name!=''">`name`=#{name},</if>
+            <if test="address!=null and address!=''">address=#{address},</if>
+            update_time=#{updateTime},
+            update_user=#{updateUser}
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <insert id="add">
+        insert into department(`name`,address,create_time, update_time, create_user, update_user)
+            VALUE (#{name}, #{address}, #{createTime}, #{updateTime},
+                   #{createUser}, #{updateUser})
+    </insert>
+
+
+    <select id="pageQuery" resultType="com.zc.pojo.entity.Department">
+        select * from department
+    </select>
+</mapper>

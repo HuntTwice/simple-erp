@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zc.mapper.GoodsMapper">
+
+    <update id="updateById">
+        update goods
+        <set>
+            <if test="name!=null and name!=''">`name`=#{name},</if>
+            <if test="supplierId!=null">supplier_id=#{supplierId},</if>
+            <if test="producer!=null and producer!=''">producer=#{producer},</if>
+            <if test="description!=null and description!=''">`description`=#{description},</if>
+            <if test="num!=null">num=#{num},</if>
+            <if test="unit!=null and unit!=''">unit=#{unit},</if>
+            <if test="img!=null and img!=''">img=#{img},</if>
+            <if test="productNo!=null and productNo!=''">product_no=#{productNo},</if>
+            <if test="approveNo!=null and approveNo!=''">approve_no=#{approveNo},</if>
+            <if test="status!=null ">`status`=#{status},</if>
+            update_time=#{updateTime},
+            update_user=#{updateUser}
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <insert id="add">
+        insert into goods(`name`, supplier_id, producer, `description`, `num`, `unit`, `img`,
+                          `product_no`, approve_no, `status`, create_time, update_time, create_user, update_user)
+            VALUE (#{name}, #{supplierId}, #{producer}, #{description}, #{num}, #{unit}, #{img}, #{productNo},
+                   #{approveNo}, #{status}, #{createTime}, #{updateTime}, #{createUser},
+                   #{updateUser})
+    </insert>
+
+
+    <select id="pageQuery" resultType="com.zc.pojo.vo.GoodsVO">
+        select s.name supplierName,goods.* from goods
+        left join supplier s on s.id = goods.supplier_id
+        <where>
+            <if test="id != null">and goods.id = #{id}</if>
+            <if test="supplierId != null">and goods.supplier_id = #{supplierId}</if>
+            <if test="name != null">and goods.name like concat('%', #{name}, '%')</if>
+            <if test="supplierName != null">and s.name like concat('%', #{supplierName}, '%')</if>
+            <if test="productNo != null">and goods.product_no like concat('%', #{productNo}, '%')</if>
+            <if test="approveNo != null">and goods.approve_no like concat('%', #{approveNo}, '%')</if>
+            <if test="status!=null">and goods.status = #{status}</if>
+        </where>
+    </select>
+</mapper>

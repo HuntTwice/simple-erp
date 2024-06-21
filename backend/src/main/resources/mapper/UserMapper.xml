@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zc.mapper.UserMapper">
+
+    <update id="updateById">
+        update user
+        <set>
+            <if test="username!=null and username!=''">`username`=#{username},</if>
+            <if test="password!=null and password!=''">`password`=#{password},</if>
+            <if test="status!=null">`status`=#{status},</if>
+            <if test="role!=null and role!=''">role=#{role},</if>
+            <if test="departmentId!=null">department_id=#{departmentId},</if>
+            <if test="name!=null and name!=''">name=#{name},</if>
+            <if test="avatar!=null and avatar!=''">avatar=#{avatar},</if>
+            <if test="age!=null">age=#{age},</if>
+            <if test="sex!=null and sex!=''">sex=#{sex},</if>
+            <if test="phone!=null and phone!=''">phone=#{phone},</if>
+            <if test="email!=null and email!=''">email=#{email},</if>
+            <if test="address!=null and address!=''">address=#{address},</if>
+            update_time=#{updateTime},
+            update_user=#{updateUser}
+        </set>
+        where id = #{id}
+    </update>
+
+    <update id="updateByUsername">
+        update user
+        <set>
+            <if test="password!=null and password!=''">`password`=#{password},</if>
+            <if test="status!=null">`status`=#{status},</if>
+            <if test="role!=null and role!=''">`role`=#{role},</if>
+            <if test="departmentId!=null">department_id=#{departmentId},</if>
+            <if test="name!=null and name!=''">name=#{name},</if>
+            <if test="avatar!=null and avatar!=''">avatar=#{avatar},</if>
+            <if test="age!=null">age=#{age},</if>
+            <if test="sex!=null and sex!=''">sex=#{sex},</if>
+            <if test="phone!=null and phone!=''">phone=#{phone},</if>
+            <if test="email!=null and email!=''">email=#{email},</if>
+            <if test="address!=null and address!=''">address=#{address},</if>
+            update_time=#{updateTime},
+            update_user=#{updateUser}
+        </set>
+        where username like #{username}
+    </update>
+
+    <insert id="add">
+        insert into user(username, `password`, `status`, `role`, department_id, `name`, avatar, age, sex, phone, email,address, create_time, update_time, create_user, update_user)
+            VALUE (#{username}, #{password}, #{status}, #{role}, #{departmentId}, #{name}, #{avatar},
+                   #{age}, #{sex}, #{phone}, #{email}, #{address}, #{createTime}, #{updateTime},
+                   #{createUser}, #{updateUser})
+    </insert>
+
+
+    <select id="pageQuery" resultType="com.zc.pojo.vo.UserQueryVO">
+        select user.*,d.name as departmentName from user
+        left join department d on user.department_id = d.id
+        <where>
+            <if test="username!=null and username!=''">and `username` like #{username}</if>
+            <if test="name!=null and name!=''">and user.name like concat('%',#{name},'%')</if>
+            <if test="status!=null">and `status`= #{status}</if>
+            <if test="role!=null and role!=''">and `role` like #{role}</if>
+            <if test="departmentId!=null">and department_id=#{departmentId}</if>
+            <if test="sex!=null and sex!=''">and sex like #{sex}</if>
+            <if test="phone!=null and phone!=''">and phone like #{phone}</if>
+        </where>
+    </select>
+</mapper>

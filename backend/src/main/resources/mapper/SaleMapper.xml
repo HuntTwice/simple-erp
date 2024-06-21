@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zc.mapper.SaleMapper">
+
+    <update id="updateById">
+        update sale
+        <set>
+            <if test="customerId!=null">customer_id=#{customerId},</if>
+            <if test="goodsId!=null">goods_id=#{goodsId},</if>
+            <if test="payType!=null and payType!=''">pay_type=#{payType},</if>
+            <if test="time!=null">`time`=#{time},</if>
+            <if test="num!=null">num=#{num},</if>
+
+            <if test="price!=null">price=#{price},</if>
+            <if test="totalPrice!=null">total_price=#{totalPrice},</if>
+            <if test="comment!=null and comment!=''">comment=#{comment},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <insert id="add">
+        insert into sale(`customer_id`, goods_id, pay_type, `time`, user_id, `num`, `price`, `total_price`,
+                          `comment`)
+            VALUE (#{customerId}, #{goodsId}, #{payType}, #{time}, #{userId}, #{num},
+                   #{price}, #{totalPrice}, #{comment})
+    </insert>
+
+
+    <select id="pageQuery" resultType="com.zc.pojo.vo.SaleVO">
+        select c.name as customerName, sale.*, g.name as goodsName ,g.unit as unit ,g.num as totalInventory, u.name as operator
+        from sale
+        left join user u on u.id = sale.user_id
+        left join goods g on sale.goods_id = g.id
+        left join customer c on c.id = sale.customer_id
+        <where>
+            <if test="customerId != null">and sale.customer_id = #{customerId}</if>
+            <if test="goodsName != null and goodsName != ''">and g.name like concat('%',#{goodsName},'%')</if>
+        </where>
+        order by time desc
+    </select>
+</mapper>

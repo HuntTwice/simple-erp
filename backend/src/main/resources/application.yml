@@ -1,0 +1,51 @@
+server:
+  port:
+
+# 数据库配置
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username:    #你本地的数据库用户名
+    password:  #你本地的数据库密码
+    url:
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+# 配置mybatis实体和xml映射
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.zc.pojo.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+# 分页
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+ip: localhost
+
+#项目配置
+simple-erp:
+  #jwt配置
+  jwt:
+    # 设置jwt签名加密时使用的秘钥
+    secret-key:
+    # 设置jwt过期时间,单位ms
+    ttl: 7200000
+    # 设置前端传递过来的令牌名称
+    token-name:
+
+
+
+  aliyun:
+    OSS:
+      endpoint:
+      accessKeyId:
+      accessKeySecret:
+      bucketName:
